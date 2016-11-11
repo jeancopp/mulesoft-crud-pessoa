@@ -1,0 +1,220 @@
+#%RAML 0.8
+title: crud-pessoa
+version: 1.0.0
+baseUri: http://localhost:3000/
+mediaType:  application/json
+protocols: [ HTTP ]
+schemas:
+ - pessoa: |
+    {
+      "type": "object",
+      "$schema": "http://json-schema.org/draft-03/schema",
+      "id": "http://jsonschema.net",
+      "required": true,
+      "properties": {
+        "id": {
+          "type": "integer",
+        },
+        "nome": {
+          "type": "string",
+          "maxLength": 45
+        },
+        "rg_ie": {
+          "type": "string",
+          "maxLength": 50
+        },
+        "cpf_cnpj": {
+          "type": "string",
+          "maxLength": 20
+        },
+        "email": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "telefones": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+            },
+            "ddd": {
+              "type": "string",
+              "maxLength": 3
+            },
+            "numero": {
+              "type": "string",
+              "maxLength": 10
+            },
+            "descricao": {
+              "type": "string",
+              "maxLength": 20
+            }
+         }
+      }
+    }
+/pessoa:
+  get:
+    description: Retorna a lista de pessoas cadastradas
+    responses:
+      200:
+        body:
+          application/json:
+            example: | 
+              [
+                {
+                  "id" : 1,
+                  "nome" : "Nome",
+                  "rg_ie" : "00.000.000-00",
+                  "email" : "teste@teste.com",
+                  "cpf_cnpj" : "000.000.000-00",
+                  "telefones" : [
+                    { "id" : 1, "ddd":"00", "numero":"0 0000-0000", "descricao":"principal" },
+                    { "id" : 2, "ddd":"00", "numero":"0 0000-0000", "descricao":"celular" }
+                  ]
+                },
+                {
+                  "id" : 2,
+                  "nome" : "Nome",
+                  "rg_ie" : "00.000.000-00",
+                  "email" : "teste@teste.com",
+                  "cpf_cnpj" : "000.000.000-00",
+                  "telefones" : [
+                    { "id" : 1, "ddd":"00", "numero":"0 0000-0000", "descricao":"principal" },
+                    { "id" : 2, "ddd":"00", "numero":"0 0000-0000", "descricao":"celular" }
+                  ]
+                },
+              ]
+  post:
+    description: Envia a pessoa a ser cadastrada
+    body: 
+      application/json:
+        example: |
+          {
+            "nome" : "Jean Coppieters Souza",
+            "rg_ie" : "38.772.465-5",
+            "email" : "jean@coppieters.com.br",
+            "cpf_cnpj" : "391.409.378-10",
+            "telefones" : [
+              { "ddd":"14", "numero":"9 9125-1258", "descricao":"celular" }
+            ]
+          }
+    
+    responses:
+      200:
+        description: Exemplo de resposta caso os dados estejam ok
+        body:
+          application/json:
+            example: |
+              "id" : 1,
+              "nome" : "Jean Coppieters Souza",
+              "rg_ie" : "38.772.465-5",
+              "email" : "jean@coppieters.com.br",
+              "cpf_cnpj" : "391.409.378-10",
+              "telefones" : [
+                { 
+                  "id" : 1 
+                  "ddd" : "14", 
+                  "numero" : "9 9125-1258", 
+                  "descricao" : "celular" 
+                }
+              ]
+      406:
+        description: Caso seja encontrado algum valor inválido
+        body:
+          application/json:
+            schema: |
+              {"message": " XXXX nÃ£o Ã© vÃ¡lido" }
+      500:
+        description: Caso ocorra algum erro ao cadastrar
+        body:
+          application/json:
+            schema: |
+              {"message": " Erro interno ao cadastrar" }
+      503:
+        description: Caso ocorra algum erro ao comunicar a api interna
+        body:
+          application/json:
+            schema: |
+              {"message": " Erro interno ao cominucar com API interna" }
+  put:
+    description: Envia a pessoa a ter os dados atualizados.
+    body: 
+      application/json:
+        example: |
+            "id" : 1,
+            "nome" : "Jean Coppieters Souza",
+            "rg_ie" : "38.772.465-5",
+            "email" : "jean@coppieters.com.br",
+            "cpf_cnpj" : "391.409.378-10",
+            "telefones" : [
+              { 
+                "id": 1, 
+                "ddd" : "14", 
+                "numero" : "9 9125-1258", 
+                "descricao" : "celular pessoal"
+              }
+            ]
+    responses:
+      200:
+        description: Caso seja realizado o update
+        body:
+          application/json:
+            schema: |
+               {"message": " XXXX nÃ£o Ã© vÃ¡lido" }
+      406:
+        description: Caso seja encontrado algum valor inválido
+        body:
+          application/json:
+            schema: |
+              {"message": " XXXX nÃ£o Ã© vÃ¡lido" }
+      500:
+        description: Caso ocorra algum erro ao cadastrar
+        body:
+          application/json:
+            schema: |
+              {"message": " Erro interno ao cadastrar" }
+      503:
+        description: Caso ocorra algum erro ao comunicar a api interna
+        body:
+          application/json:
+            schema: |
+              {"message": " Erro interno ao cominucar com API interna" }
+  /{codigo}:
+    get:
+      description: Envia o cÃ³digo da pessoa a ser pesquisada
+      responses:
+        200:
+          body:
+            application/json:
+              example: | 
+                  {
+                    "id" : 1,
+                    "nome" : "Nome",
+                    "rg_ie" : "00.000.000-00",
+                    "email" : "teste@teste.com",
+                    "cpf_cnpj" : "000.000.000-00",
+                     "telefones" : [
+                      { "id" : 1, "ddd":"00", "numero":"0 0000-0000", "descricao":"principal" },
+                      { "id" : 2, "ddd":"00", "numero":"0 0000-0000", "descricao":"celular" }
+                    ]
+                  }
+    delete:
+      description: Envia o código da pessoa a ser deletada
+      responses:
+        200:
+          body:
+            application/json:
+              example: | 
+                { "msg" : "Pessoa removida com sucesso" }
+        500:
+          description: Caso haja algum erro interno
+          body:
+            application/json:
+              schema: |
+                {"message": " Erro interno ao remover: XXXXXXX" }
+        503:
+          description: Caso haja algum erro ao comunicar com a API interna
+          body:
+            application/json:
+              schema: |
+                {"message": " Erro interno ao cominucar com API interna" }
